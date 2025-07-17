@@ -95,16 +95,18 @@ For external URLs, use `window.location = url` instead of calling `goto(url)`.
 ```dts
 function goto(
 	url: string | URL,
-	opts?: {
-		replaceState?: boolean | undefined;
-		noScroll?: boolean | undefined;
-		keepFocus?: boolean | undefined;
-		invalidateAll?: boolean | undefined;
-		invalidate?:
-			| (string | URL | ((url: URL) => boolean))[]
-			| undefined;
-		state?: App.PageState | undefined;
-	}
+	opts?:
+		| {
+				replaceState?: boolean | undefined;
+				noScroll?: boolean | undefined;
+				keepFocus?: boolean | undefined;
+				invalidateAll?: boolean | undefined;
+				invalidate?:
+					| (string | URL | ((url: URL) => boolean))[]
+					| undefined;
+				state?: App.PageState | undefined;
+		  }
+		| undefined
 ): Promise<void>;
 ```
 
@@ -133,7 +135,10 @@ invalidate((url) => url.pathname === '/path');
 
 ```dts
 function invalidate(
-	resource: string | URL | ((url: URL) => boolean)
+	resource: string | URL | ((url: URL) => boolean),
+	opts?: {
+		replaceState?: boolean | undefined;
+	}
 ): Promise<void>;
 ```
 
@@ -148,7 +153,9 @@ Causes all `load` functions belonging to the currently active page to re-run. Re
 <div class="ts-block">
 
 ```dts
-function invalidateAll(): Promise<void>;
+function invalidateAll(opts?: {
+	replaceState?: boolean | undefined;
+}): Promise<void>;
 ```
 
 </div>
