@@ -286,13 +286,14 @@ See [form actions](/docs/kit/form-actions) for more information.
 
 ```dts
 type Action<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	OutputData extends Record<string, any> | void = Record<
 		string,
 		any
 	> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = (
 	event: RequestEvent<Params, RouteId>
 ) => MaybePromise<OutputData>;
@@ -376,13 +377,14 @@ See [form actions](/docs/kit/form-actions) for more information.
 
 ```dts
 type Actions<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	OutputData extends Record<string, any> | void = Record<
 		string,
 		any
 	> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = Record<string, Action<Params, OutputData, RouteId>>;
 ```
 
@@ -1206,8 +1208,9 @@ rather than using `Load` directly.
 
 ```dts
 type Load<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	InputData extends Record<string, unknown> | null = Record<
 		string,
 		any
@@ -1220,7 +1223,7 @@ type Load<
 		string,
 		unknown
 	> | void = Record<string, any> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = (
 	event: LoadEvent<Params, InputData, ParentData, RouteId>
 ) => MaybePromise<OutputData>;
@@ -1237,8 +1240,9 @@ rather than using `LoadEvent` directly.
 
 ```dts
 interface LoadEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	Data extends Record<string, unknown> | null = Record<
 		string,
 		any
@@ -1247,7 +1251,7 @@ interface LoadEvent<
 		string,
 		any
 	>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > extends NavigationEvent<Params, RouteId> {/*…*/}
 ```
 
@@ -1522,9 +1526,10 @@ fails or is aborted. In the case of a `willUnload` navigation, the promise will 
 
 ```dts
 interface NavigationEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
+	RouteId extends string | null = string | null
 > {/*…*/}
 ```
 
@@ -1727,16 +1732,18 @@ The shape of the [`page`](/docs/kit/$app-state#page) reactive object and the [`$
 
 ```dts
 interface Page<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Record<string, string> = Record<
+		string,
+		string
+	>,
+	RouteId extends string | null = string | null
 > {/*…*/}
 ```
 
 <div class="ts-block-property">
 
 ```dts
-url: URL & { pathname: ResolvedPathname };
+url: URL;
 ```
 
 <div class="ts-block-property-details">
@@ -1914,9 +1921,10 @@ The location to redirect to.
 
 ```dts
 interface RequestEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
+	RouteId extends string | null = string | null
 > {/*…*/}
 ```
 
@@ -2128,9 +2136,10 @@ It receives `Params` as the first generic argument, which you can skip by using 
 
 ```dts
 type RequestHandler<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
+	RouteId extends string | null = string | null
 > = (
 	event: RequestEvent<Params, RouteId>
 ) => MaybePromise<Response>;
@@ -2488,8 +2497,9 @@ rather than using `ServerLoad` directly.
 
 ```dts
 type ServerLoad<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	ParentData extends Record<string, any> = Record<
 		string,
 		any
@@ -2498,7 +2508,7 @@ type ServerLoad<
 		string,
 		any
 	> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = (
 	event: ServerLoadEvent<Params, ParentData, RouteId>
 ) => MaybePromise<OutputData>;
@@ -2512,13 +2522,14 @@ type ServerLoad<
 
 ```dts
 interface ServerLoadEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	ParentData extends Record<string, any> = Record<
 		string,
 		any
 	>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > extends RequestEvent<Params, RouteId> {/*…*/}
 ```
 
