@@ -29,13 +29,49 @@ export default config;
 
 ## Config
 
-An extension of [`vite-plugin-svelte`'s options](https://github.com/sveltejs/vite-plugin-svelte/blob/main/docs/config.md#svelte-options).
-
 <div class="ts-block">
 
 ```dts
-interface Config extends SvelteConfig {/*…*/}
+interface Config {/*…*/}
 ```
+
+<div class="ts-block-property">
+
+```dts
+compilerOptions?: CompileOptions;
+```
+
+<div class="ts-block-property-details">
+
+<div class="ts-block-property-bullets">
+
+- <span class="tag">default</span> `{}`
+
+</div>
+
+Options passed to [`svelte.compile`](/docs/svelte/svelte-compiler#CompileOptions).
+
+</div>
+</div>
+
+<div class="ts-block-property">
+
+```dts
+extensions?: string[];
+```
+
+<div class="ts-block-property-details">
+
+<div class="ts-block-property-bullets">
+
+- <span class="tag">default</span> `[".svelte"]`
+
+</div>
+
+List of file extensions that should be treated as Svelte files.
+
+</div>
+</div>
 
 <div class="ts-block-property">
 
@@ -45,7 +81,33 @@ kit?: KitConfig;
 
 <div class="ts-block-property-details">
 
-SvelteKit options.
+SvelteKit options
+
+</div>
+</div>
+
+<div class="ts-block-property">
+
+```dts
+preprocess?: any;
+```
+
+<div class="ts-block-property-details">
+
+Preprocessor options, if any. Preprocessing can alternatively also be done through Vite's preprocessor capabilities.
+
+</div>
+</div>
+
+<div class="ts-block-property">
+
+```dts
+vitePlugin?: PluginOptions;
+```
+
+<div class="ts-block-property-details">
+
+`vite-plugin-svelte` plugin options.
 
 </div>
 </div>
@@ -353,40 +415,6 @@ privatePrefix?: string;
 </div>
 
 A prefix that signals that an environment variable is unsafe to expose to client-side code. Environment variables matching neither the public nor the private prefix will be discarded completely. See [`$env/static/private`](/docs/kit/$env-static-private) and [`$env/dynamic/private`](/docs/kit/$env-dynamic-private).
-
-</div>
-</div>
-
-</div>
-
-## experimental
-
-<div class="ts-block-property-bullets">
-
-
-
-</div>
-
-Experimental features which are exempt from semantic versioning. These features may be changed or removed at any time.
-
-<div class="ts-block-property-children">
-
-<div class="ts-block-property">
-
-```ts
-// @noErrors
-remoteFunctions?: boolean;
-```
-
-<div class="ts-block-property-details">
-
-<div class="ts-block-property-bullets">
-
-- <span class="tag">default</span> `false`
-
-</div>
-
-Whether to enable the experimental remote functions feature. This feature is not yet stable and may be changed or removed at any time.
 
 </div>
 </div>

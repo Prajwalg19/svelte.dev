@@ -33,7 +33,7 @@ Doing this manually is tedious. There are a variety of techniques you can use, d
 
 Install:
 
-```sh
+```bash
 npm install --save-dev @sveltejs/enhanced-img
 ```
 

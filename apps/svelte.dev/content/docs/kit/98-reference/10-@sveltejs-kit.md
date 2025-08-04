@@ -118,10 +118,9 @@ function fail(status: number): ActionFailure<undefined>;
 <div class="ts-block">
 
 ```dts
-function fail<T = undefined>(
-	status: number,
-	data: T
-): ActionFailure<T>;
+function fail<
+	T extends Record<string, unknown> | undefined = undefined
+>(status: number, data: T): ActionFailure<T>;
 ```
 
 </div>
@@ -287,13 +286,14 @@ See [form actions](/docs/kit/form-actions) for more information.
 
 ```dts
 type Action<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	OutputData extends Record<string, any> | void = Record<
 		string,
 		any
 	> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = (
 	event: RequestEvent<Params, RouteId>
 ) => MaybePromise<OutputData>;
@@ -306,7 +306,9 @@ type Action<
 <div class="ts-block">
 
 ```dts
-interface ActionFailure<T = undefined> {/*…*/}
+interface ActionFailure<
+	T extends Record<string, unknown> | undefined = undefined
+> {/*…*/}
 ```
 
 <div class="ts-block-property">
@@ -375,13 +377,14 @@ See [form actions](/docs/kit/form-actions) for more information.
 
 ```dts
 type Actions<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	OutputData extends Record<string, any> | void = Record<
 		string,
 		any
 	> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = Record<string, Action<Params, OutputData, RouteId>>;
 ```
 
@@ -615,7 +618,7 @@ config: ValidatedConfig;
 
 <div class="ts-block-property-details">
 
-The fully resolved Svelte config.
+The fully resolved `svelte.config.js`.
 
 </div>
 </div>
@@ -1141,26 +1144,6 @@ type HandleServerError = (input: {
 
 </div>
 
-## HandleValidationError
-
-The [`handleValidationError`](/docs/kit/hooks#Server-hooks-handleValidationError) hook runs when the argument to a remote function fails validation.
-
-It will be called with the validation issues and the event, and must return an object shape that matches `App.Error`.
-
-<div class="ts-block">
-
-```dts
-type HandleValidationError<
-	Issue extends
-		StandardSchemaV1.Issue = StandardSchemaV1.Issue
-> = (input: {
-	issues: Issue[];
-	event: RequestEvent;
-}) => MaybePromise<App.Error>;
-```
-
-</div>
-
 ## HttpError
 
 The object returned by the [`error`](/docs/kit/@sveltejs-kit#error) function.
@@ -1225,8 +1208,9 @@ rather than using `Load` directly.
 
 ```dts
 type Load<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	InputData extends Record<string, unknown> | null = Record<
 		string,
 		any
@@ -1239,7 +1223,7 @@ type Load<
 		string,
 		unknown
 	> | void = Record<string, any> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = (
 	event: LoadEvent<Params, InputData, ParentData, RouteId>
 ) => MaybePromise<OutputData>;
@@ -1256,8 +1240,9 @@ rather than using `LoadEvent` directly.
 
 ```dts
 interface LoadEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	Data extends Record<string, unknown> | null = Record<
 		string,
 		any
@@ -1266,7 +1251,7 @@ interface LoadEvent<
 		string,
 		any
 	>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > extends NavigationEvent<Params, RouteId> {/*…*/}
 ```
 
@@ -1541,9 +1526,10 @@ fails or is aborted. In the case of a `willUnload` navigation, the promise will 
 
 ```dts
 interface NavigationEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
+	RouteId extends string | null = string | null
 > {/*…*/}
 ```
 
@@ -1746,16 +1732,18 @@ The shape of the [`page`](/docs/kit/$app-state#page) reactive object and the [`$
 
 ```dts
 interface Page<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Record<string, string> = Record<
+		string,
+		string
+	>,
+	RouteId extends string | null = string | null
 > {/*…*/}
 ```
 
 <div class="ts-block-property">
 
 ```dts
-url: URL & { pathname: ResolvedPathname };
+url: URL;
 ```
 
 <div class="ts-block-property-details">
@@ -1927,236 +1915,16 @@ The location to redirect to.
 </div>
 </div></div>
 
-## RemoteCommand
-
-The return value of a remote `command` function. See [Remote functions](/docs/kit/remote-functions#command) for full documentation.
-
-<div class="ts-block">
-
-```dts
-type RemoteCommand<Input, Output> = (arg: Input) => Promise<
-	Awaited<Output>
-> & {
-	updates(
-		...queries: Array<
-			RemoteQuery<any> | RemoteQueryOverride
-		>
-	): Promise<Awaited<Output>>;
-};
-```
-
-</div>
-
-## RemoteForm
-
-The return value of a remote `form` function. See [Remote functions](/docs/kit/remote-functions#form) for full documentation.
-
-<div class="ts-block">
-
-```dts
-type RemoteForm<Result> = {
-	method: 'POST';
-	/** The URL to send the form to. */
-	action: string;
-	/** Event handler that intercepts the form submission on the client to prevent a full page reload */
-	onsubmit: (event: SubmitEvent) => void;
-	/** Use the `enhance` method to influence what happens when the form is submitted. */
-	enhance(
-		callback: (opts: {
-			form: HTMLFormElement;
-			data: FormData;
-			submit: () => Promise<void> & {
-				updates: (
-					...queries: Array<
-						RemoteQuery<any> | RemoteQueryOverride
-					>
-				) => Promise<void>;
-			};
-		}) => void
-	): {
-		method: 'POST';
-		action: string;
-		onsubmit: (event: SubmitEvent) => void;
-	};
-	/**
-	 * Create an instance of the form for the given key.
-	 * The key is stringified and used for deduplication to potentially reuse existing instances.
-	 * Useful when you have multiple forms that use the same remote form action, for example in a loop.
-	 * ```svelte
-	 * {#each todos as todo}
-	 *	{@const todoForm = updateTodo.for(todo.id)}
-	 *	<form {...todoForm}>
-	 *		{#if todoForm.result?.invalid}<p>Invalid data</p>{/if}
-	 *		...
-	 *	</form>
-	 *	{/each}
-	 * ```
-	 */
-	for(
-		key: string | number | boolean
-	): Omit<RemoteForm<Result>, 'for'>;
-	/** The result of the form submission */
-	get result(): Result | undefined;
-	/** Spread this onto a `<button>` or `<input type="submit">` */
-	buttonProps: {
-		type: 'submit';
-		formmethod: 'POST';
-		formaction: string;
-		onclick: (event: Event) => void;
-		/** Use the `enhance` method to influence what happens when the form is submitted. */
-		enhance(
-			callback: (opts: {
-				form: HTMLFormElement;
-				data: FormData;
-				submit: () => Promise<void> & {
-					updates: (
-						...queries: Array<
-							RemoteQuery<any> | RemoteQueryOverride
-						>
-					) => Promise<void>;
-				};
-			}) => void
-		): {
-			type: 'submit';
-			formmethod: 'POST';
-			formaction: string;
-			onclick: (event: Event) => void;
-		};
-	};
-};
-```
-
-</div>
-
-## RemotePrerenderFunction
-
-The return value of a remote `prerender` function. See [Remote functions](/docs/kit/remote-functions#prerender) for full documentation.
-
-<div class="ts-block">
-
-```dts
-type RemotePrerenderFunction<Input, Output> = (
-	arg: Input
-) => RemoteResource<Output>;
-```
-
-</div>
-
-## RemoteQuery
-
-<div class="ts-block">
-
-```dts
-type RemoteQuery<T> = RemoteResource<T> & {
-	/**
-	 * On the client, this function will re-fetch the query from the server.
-	 *
-	 * On the server, this can be called in the context of a `command` or `form` and the refreshed data will accompany the action response back to the client.
-	 * This prevents SvelteKit needing to refresh all queries on the page in a second server round-trip.
-	 */
-	refresh(): Promise<void>;
-	/**
-	 * Temporarily override the value of a query. This is used with the `updates` method of a [command](https://svelte.dev/docs/kit/remote-functions#command-Single-flight-mutations) or [enhanced form submission](https://svelte.dev/docs/kit/remote-functions#form-enhance) to provide optimistic updates.
-	 *
-	 * ```svelte
-	 * <script>
-	 *   import { getTodos, addTodo } from './todos.remote.js';
-	 *   const todos = getTodos();
-	 * </script>
-	 *
-	 * <form {...addTodo.enhance(async ({ data, submit }) => {
-	 *   await submit().updates(
-	 *     todos.withOverride((todos) => [...todos, { text: data.get('text') }])
-	 *   );
-	 * }}>
-	 *   <input type="text" name="text" />
-	 *   <button type="submit">Add Todo</button>
-	 * </form>
-	 * ```
-	 */
-	withOverride(
-		update: (current: Awaited<T>) => Awaited<T>
-	): RemoteQueryOverride;
-};
-```
-
-</div>
-
-## RemoteQueryFunction
-
-The return value of a remote `query` function. See [Remote functions](/docs/kit/remote-functions#query) for full documentation.
-
-<div class="ts-block">
-
-```dts
-type RemoteQueryFunction<Input, Output> = (
-	arg: Input
-) => RemoteQuery<Output>;
-```
-
-</div>
-
-## RemoteQueryOverride
-
-<div class="ts-block">
-
-```dts
-interface RemoteQueryOverride {/*…*/}
-```
-
-<div class="ts-block-property">
-
-```dts
-_key: string;
-```
-
-<div class="ts-block-property-details"></div>
-</div>
-
-<div class="ts-block-property">
-
-```dts
-release(): void;
-```
-
-<div class="ts-block-property-details"></div>
-</div></div>
-
-## RemoteResource
-
-<div class="ts-block">
-
-```dts
-type RemoteResource<T> = Promise<Awaited<T>> & {
-	/** The error in case the query fails. Most often this is a [`HttpError`](https://svelte.dev/docs/kit/@sveltejs-kit#HttpError) but it isn't guaranteed to be. */
-	get error(): any;
-	/** `true` before the first result is available and during refreshes */
-	get loading(): boolean;
-} & (
-		| {
-				/** The current value of the query. Undefined until `ready` is `true` */
-				get current(): undefined;
-				ready: false;
-		  }
-		| {
-				/** The current value of the query. Undefined until `ready` is `true` */
-				get current(): Awaited<T>;
-				ready: true;
-		  }
-	);
-```
-
-</div>
-
 ## RequestEvent
 
 <div class="ts-block">
 
 ```dts
 interface RequestEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
+	RouteId extends string | null = string | null
 > {/*…*/}
 ```
 
@@ -2356,20 +2124,6 @@ isSubRequest: boolean;
 `true` for `+server.js` calls coming from SvelteKit without the overhead of actually making an HTTP request. This happens when you make same-origin `fetch` requests on the server.
 
 </div>
-</div>
-
-<div class="ts-block-property">
-
-```dts
-isRemoteRequest: boolean;
-```
-
-<div class="ts-block-property-details">
-
-`true` if the request comes from the client via a remote function. The `url` property will be stripped of the internal information
-related to the data request in this case. Use this property instead if the distinction is important to you.
-
-</div>
 </div></div>
 
 ## RequestHandler
@@ -2382,9 +2136,10 @@ It receives `Params` as the first generic argument, which you can skip by using 
 
 ```dts
 type RequestHandler<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
+	RouteId extends string | null = string | null
 > = (
 	event: RequestEvent<Params, RouteId>
 ) => MaybePromise<Response>;
@@ -2644,18 +2399,6 @@ nodes: SSRNodeLoader[];
 <div class="ts-block-property">
 
 ```dts
-remotes: Record<string, () => Promise<any>>;
-```
-
-<div class="ts-block-property-details">
-
-hashed filename -> import to that file
-
-</div>
-</div>
-<div class="ts-block-property">
-
-```dts
 routes: SSRRoute[];
 ```
 
@@ -2735,7 +2478,7 @@ A map of environment variables.
 <div class="ts-block-property">
 
 ```dts
-read?: (file: string) => MaybePromise<ReadableStream | null>;
+read?: (file: string) => ReadableStream;
 ```
 
 <div class="ts-block-property-details">
@@ -2754,8 +2497,9 @@ rather than using `ServerLoad` directly.
 
 ```dts
 type ServerLoad<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	ParentData extends Record<string, any> = Record<
 		string,
 		any
@@ -2764,7 +2508,7 @@ type ServerLoad<
 		string,
 		any
 	> | void,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > = (
 	event: ServerLoadEvent<Params, ParentData, RouteId>
 ) => MaybePromise<OutputData>;
@@ -2778,13 +2522,14 @@ type ServerLoad<
 
 ```dts
 interface ServerLoadEvent<
-	Params extends
-		AppLayoutParams<'/'> = AppLayoutParams<'/'>,
+	Params extends Partial<Record<string, string>> = Partial<
+		Record<string, string>
+	>,
 	ParentData extends Record<string, any> = Record<
 		string,
 		any
 	>,
-	RouteId extends AppRouteId | null = AppRouteId | null
+	RouteId extends string | null = string | null
 > extends RequestEvent<Params, RouteId> {/*…*/}
 ```
 
